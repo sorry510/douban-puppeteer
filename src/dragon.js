@@ -14,14 +14,18 @@ const mbaseUrl = 'https://m.douban.com'
     const strMids = fs.readFileSync('./mid.json') // 直接就是数组
 
     for(let {mId, type } of rows) {
-      const { id, alt } = row
-
+      const movieinfo = { mId, type } // 电影信息
       // const subject = rest // 初始化详情数据
 
-      // console.log('start open douban url')
-      // await douban.goto(alt) // 进入详情页
-      // await douban.wait('#wrapper')
-      // console.log('start scripy ...')
+      console.log('start open douban url')
+      await douban.goto(`${baseUrl}/subject/${mId}`) // 进入详情页
+      await douban.wait('#wrapper')
+      console.log('start scripy ...')
+
+      const imgpic = await douban.$eval('#mainpic img', el => el.src) // 电影海报
+      movieinfo.small = imgpic
+      movieinfo.medium = imgpic
+      movieinfo.large = imgpic
 
       // const strInfo = await douban.$eval('#info', el => el.textContent) // 电影相关信息
       // strInfo.trim().split('\n').map(item=> {
