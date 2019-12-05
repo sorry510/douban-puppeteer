@@ -1,7 +1,7 @@
 const Douban = require('../douban')
 const mysql = require('../db/Mysql')
 const { regIncludes } = require('./util')
-const fs = require('fs')
+const mids = require('../movies.json')
 
 const baseUrl = 'https://movie.douban.com'
 const mbaseUrl = 'https://m.douban.com'
@@ -11,14 +11,14 @@ const mbaseUrl = 'https://m.douban.com'
     const douban = await new Douban({headless: true}) // 为true为无头
     await douban.launch()
     console.time('time spend:')
-    const strMids = fs.readFileSync('./mid.json') // 直接就是数组
 
-    for(let {mId, type } of rows) {
-      const movieinfo = { mId, type } // 电影信息
+    for(let { mId, type, title } of mids) {
+      const movieinfo = { mId, type, title } // 电影信息
       // const subject = rest // 初始化详情数据
 
       console.log('start open douban url')
-      await douban.goto(`${baseUrl}/subject/${mId}`) // 进入详情页
+      movieinfo.alt = `${baseUrl}/subject/${mId}`
+      await douban.goto(movieinfo.alt) // 进入详情页
       await douban.wait('#wrapper')
       console.log('start scripy ...')
 
@@ -26,6 +26,8 @@ const mbaseUrl = 'https://m.douban.com'
       movieinfo.small = imgpic
       movieinfo.medium = imgpic
       movieinfo.large = imgpic
+
+      process.exit()
 
       // const strInfo = await douban.$eval('#info', el => el.textContent) // 电影相关信息
       // strInfo.trim().split('\n').map(item=> {

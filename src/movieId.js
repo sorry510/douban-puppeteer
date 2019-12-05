@@ -27,13 +27,17 @@ const movieSearchUrl = `https://movie.douban.com/explore#!type=movie&tag=${MOVIE
       await douban.wait(1000)
     }
 
-    const subjectUrls = await douban.$$eval('#content .list-wp .item', eles=> eles.map(el=> el.href))
-    const mIds = subjectUrls.map(item=> ({type, mId: item.match(/.*subject\/([0-9]*)/)[1]}))
-    console.log('movie list count:' + mIds.length)
+    const mIds = await douban.$$eval('#content .list-wp .item', eles=> eles.map(({ href })=> href.match(/.*subject\/([0-9]*)/)[1]))
+    const titles = await douban.$$eval('#content .list-wp .item .cover-wp img', eles=> eles.map(({ alt })=> alt))
 
-    fs.writeFile('mid.json', JSON.stringify(mIds), (err) => {
+    const movies = mIds.map((mId, index)=> ({title: titles[index], mId, type}))
+
+    console.log(movies[0])
+    console.log('movie list count:' + movies.length)
+
+    fs.writeFile('movies.json', JSON.stringify(movies), (err) => {
       if (err) throw err
-      console.log('mid saved in mid.json')
+      console.log('mid saved in movies.json')
     })
     await douban.browserClose()
 
