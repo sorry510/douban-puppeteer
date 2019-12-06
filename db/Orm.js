@@ -2,13 +2,18 @@ const _ = require('lodash')
 module.exports = class Orm {
 
   constructor() {
+    this.__sql = null // 最后一条sql
+    this.reset()
+  }
+
+  reset() {
     this._sql = null
     this._table = null
     this._fields = '*'
     this._where = []
     this._limit = null
-    // this._groupBy = null
     this._order = []
+    this._groupBy = null
     this._type = 'select'
   }
 
@@ -62,28 +67,29 @@ module.exports = class Orm {
 
   first() {
     this._type = 'select'
-    this.composer()
+    return this.composer()
   }
 
   get() {
     this._type = 'select'
-    this.composer()
+    return this.composer()
   }
 
   insert(data) {
     this._type = 'insert'
-    this.composer(data)
+    return this.composer(data)
   }
 
   update(data) {
     this._type = 'update'
-    this.composer(data)
+    return this.composer(data)
   }
 
   delete() {
     this._type = 'delete'
-    this.composer()
+    return this.composer()
   }
+
 
   // 组装sql
   composer(data) {
@@ -103,7 +109,10 @@ module.exports = class Orm {
           break
       }
     }
-    return this
+    const sql = this._sql
+    this.__sql = sql
+    this.reset()
+    return sql
   }
 
   _handleWhere() {

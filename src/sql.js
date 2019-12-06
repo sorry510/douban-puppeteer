@@ -29,16 +29,14 @@ const mysql = require('../db/Mysql')
     }
     // const [rows, fields] = await mysql.query('select id from t_douban_movie where mId = ? limit 1', [1])
     // const [rows, fields] = await mysql.query("update t_douban_movie set genres='ab', update_time='23432' where mId=? limit 1", [1])
-    const res = await mysql.table('t_douban_movie')
-      // .select('id', 'title')
-      // .where([
-      //   ['id', '>', 1],
-      //   ['mId', 2],
-      // ])
-      .where('mId', '=', '27119724')
-      // // .where('id', '1')
-      // // .orderBy('id', 'asc')
-      // .limit(1)
+    await mysql.table('t_douban_movie')
+      .select('id', 'title')
+      .where([
+        ['id', '>', 1],
+        ['mId', 2],
+      ])
+      .orderBy('id', 'asc')
+      .limit(1, 10)
       .get()
       // .insert(data)
     // const sql2 = mysql.query("select id,title from t_douban_movie where 1=1 and id='1' and mId='1' order by id asc limit 1, 9").first()

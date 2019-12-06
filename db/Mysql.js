@@ -3,7 +3,8 @@ const reduce = require('lodash/reduce')
 const mysql = require('mysql2')
 const Orm = require('./Orm')
 
-const { DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE } = process.env
+let { DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, DB_DEBUG } = process.env
+DB_DEBUG = Number(DB_DEBUG)
 
 class Mysql extends Orm {
   constructor() {
@@ -63,34 +64,39 @@ class Mysql extends Orm {
   }
 
   async first() {
-    super.first()
-    const [ rows ] = await this.conn.query(this._sql)
+    const sql = super.first()
+    DB_DEBUG && console.log(sql)
+    const [ rows ] = await this.conn.query(sql)
     return rows.length > 0 ? rows[0] : null
   }
 
   async get() {
-    super.get()
-    const [ rows ] = await this.conn.query(this._sql)
+    const sql = super.get()
+    DB_DEBUG && console.log(sql)
+    const [ rows ] = await this.conn.query(sql)
     return rows
   }
 
   async insert(data) {
-    super.insert(data)
-    const [ ResultSetHeader ] = await this.conn.query(this._sql)
+    const sql = super.insert(data)
+    DB_DEBUG && console.log(sql)
+    const [ ResultSetHeader ] = await this.conn.query(sql)
     // const { insertId } = ResultSetHeader
     return ResultSetHeader
   }
 
   async update(data) {
-    super.update(data)
-    const [ ResultSetHeader ] = await this.conn.query(this._sql)
+    const sql = super.update(data)
+    DB_DEBUG && console.log(sql)
+    const [ ResultSetHeader ] = await this.conn.query(sql)
     // {affectedRows: 3, changedRows: 0} 
     return ResultSetHeader
   }
 
   async delete() {
-    super.delete()
-    const [ ResultSetHeader ] = await this.conn.query(this._sql) 
+    const sql = super.delete()
+    DB_DEBUG && console.log(sql)
+    const [ ResultSetHeader ] = await this.conn.query(sql) 
     // {affectedRows: 1}
     return ResultSetHeader
   }
