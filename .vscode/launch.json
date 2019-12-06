@@ -11,7 +11,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\src\\dragon.js"
+      "program": "${workspaceFolder}\\src\\baseInfo.js"
     }
   ]
 }
