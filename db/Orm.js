@@ -42,7 +42,7 @@ module.exports = class Orm {
    * 原生sql
    * @param {*} sql 
    */
-  query(sql) {
+  raw(sql) {
     this._sql = sql
     return this
   }

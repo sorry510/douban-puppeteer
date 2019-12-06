@@ -49,24 +49,7 @@ class Mysql extends Orm {
     return start + set.slice(0, -1) + ' ' + other
   }
 
-  // async insert(table, data) {
-  //   const keys = Object.keys(data).join(',')
-  //   const values = Object.values(data)
-  //   const pre = Array(values.length).fill('?')
-  //   const sql = `insert into ${table} (${keys}) values (${pre})`
-  //   return await this.conn.execute(sql, values)
-  // }
-
-  // async update(table, data, other='limit 1') {
-  //   const keys = Object.keys(data)
-  //   const values = Object.values(data)
-  //   const start = `update ${table} set `
-  //   const set = keys.reduce((sql, key)=> `${sql}${key}='?',`, '')
-  //   const sql = start + set.slice(0, -1) + ' ' + other
-  //   return await this.conn.execute(sql, values)
-  // }
-
-  async _query(sql, data) {
+  async query(sql, data) {
     if(!data) {
       return await this.conn.query(sql)
     }else {
@@ -118,8 +101,3 @@ class Mysql extends Orm {
 }
 
 module.exports = new Mysql()
-
-// // now get a Promise wrapped instance of that pool
-// const promisePool = pool.promise();
-// // query database using promises
-// const [rows,fields] = await promisePool.query("SELECT 1");
