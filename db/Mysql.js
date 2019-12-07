@@ -2,7 +2,6 @@ require('dotenv').config()
 const reduce = require('lodash/reduce')
 const mysql = require('mysql2')
 const Orm = require('./Orm')
-const { speicalFilter } = require('../util')
 
 let { DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, DB_DEBUG } = process.env
 DB_DEBUG = Number(DB_DEBUG)
@@ -79,7 +78,7 @@ class Mysql extends Orm {
   }
 
   async insert(data) {
-    const sql = super.insert(speicalFilter(data))
+    const sql = super.insert(data)
     DB_DEBUG && console.log(sql)
     const [ ResultSetHeader ] = await this.conn.query(sql)
     // const { insertId } = ResultSetHeader
@@ -87,7 +86,7 @@ class Mysql extends Orm {
   }
 
   async update(data) {
-    const sql = super.update(speicalFilter(data))
+    const sql = super.update(data)
     DB_DEBUG && console.log(sql)
     const [ ResultSetHeader ] = await this.conn.query(sql)
     // {affectedRows: 3, changedRows: 0} 

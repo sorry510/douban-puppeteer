@@ -160,7 +160,7 @@ module.exports = class Orm {
 
   _updateSql(data) {
     this._sql = `update ${this._table} set `
-    const set = _.reduce(data, (sql, value, key)=> `${sql}${key}="${value}",`, '').slice(0, -1)
+    const set = _.reduce(data, (sql, value, key)=> `${sql}${key}='${value}',`, '').slice(0, -1)
     this._sql += set + ' where 1=1'
     this._handleWhere()
     this._handleOrderBy()
