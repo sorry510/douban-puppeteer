@@ -6,6 +6,7 @@ const baseUrl = 'https://movie.douban.com'
 const error = [] // 失败mId
 let count = 0 // 成功数量
 
+// 海报照片
 ;(async () => {
     const douban = await new Douban({headless: true}) // 为true为无头
     await douban.launch()

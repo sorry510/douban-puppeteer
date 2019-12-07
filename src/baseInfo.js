@@ -8,6 +8,7 @@ const mbaseUrl = 'https://m.douban.com'
 const error = [] // 失败mId
 let count = 0 // 成功数量
 
+// 电影基本信息和明细信息
 ;(async () => {
     const douban = await new Douban({headless: true}) // 为true为无头
     await douban.launch()
