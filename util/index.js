@@ -12,7 +12,7 @@ const includeZh = (str)=> {
 
 // 分隔字符串返回json结构
 const jsonSplitStr = (str)=> {
-	return JSON.stringify(str.trim().split('/').map(v=> v.trim()))
+	return JSON.stringify(str.trim().split('/').map(v=> escape(v.trim())))
 }
 
 // 转义字符

@@ -1,17 +1,17 @@
 const Douban = require('../douban')
 const mysql = require('../db/Mysql')
-const { jsonSplitStr } = require('../util')
+const { jsonSplitStr, speicalFilter } = require('../util')
 const mids = require('../movies.json')
 
 const baseUrl = 'https://movie.douban.com'
 const mbaseUrl = 'https://m.douban.com'
+const error = [] // 失败mId
+let count = 0 // 成功数量
 
 ;(async () => {
-  
     const douban = await new Douban({headless: true}) // 为true为无头
     await douban.launch()
     console.time('time spend:')
-    let count = 0
     for(let { mId, type, title } of mids) {
       const movieinfo = { 
         mId, 
@@ -25,7 +25,7 @@ const mbaseUrl = 'https://m.douban.com'
       } // 电影信息
       // const subject = rest // 初始化详情数据
       try {
-        console.log('start open douban_subject url')
+        console.log('start open douban_subject url:' + mId)
         movieinfo.alt = `${baseUrl}/subject/${mId}`
         await douban.goto(movieinfo.alt) // 进入详情页
         await douban.wait('#wrapper')
@@ -37,7 +37,7 @@ const mbaseUrl = 'https://m.douban.com'
         movieinfo.large = imgpic
 
         const strtitle = await douban.$eval('#content h1 span', el=> el.innerText) // 电影名称和原名称
-        movieinfo.original_title = strtitle.substr(strtitle.indexOf(' ') + 1) // 假设他是原名称,不再做复杂判断
+        movieinfo.original_title = speicalFilter(strtitle.substr(strtitle.indexOf(' ') + 1)) // 假设他是原名称,不再做复杂判断
 
         movieinfo.year = await douban.$eval('#content h1 .year', el=> el.innerText.substr(1, 4)) // 出产年份
 
@@ -83,19 +83,18 @@ const mbaseUrl = 'https://m.douban.com'
         }else {
           // 新增电影记录
           const { insertId } = await mysql.table('t_douban_movie').insert(movieinfo)
-          console.log(insertId)
           console.log('insert movie mId:' + mId)
         }
 
-      // 电影明细
-        const subject = (function(movieinfo) {
-          const { alt, type, director, scriptwriter, language, show_date, longtime, update_time, ...rest } = movieinfo
+        // 电影明细
+        const subject = (function(info) {
+          const { alt, type, director, scriptwriter, language, show_date, longtime, update_time, ...rest } = info
           return rest
         })(movieinfo)
 
         subject.aka = aka // 别名
         const summary = await douban.$eval('#link-report', el=> el.innerText)  // 摘要
-        subject.summary = summary.replace(/'/g, "\\'") // 替换'
+        subject.summary = speicalFilter(summary) // 替换'和"
 
         const comments = await douban.$eval('#comments-section .pl a', el=> el.innerText)
         const [commentsCount = 0] = comments.match(/[0-9]+/) // 短评论数量
@@ -117,17 +116,22 @@ const mbaseUrl = 'https://m.douban.com'
           const { insertId } = await mysql.table('t_douban_subject').insert(subject)
           console.log('insert subject mId:' + mId)
         }
+        count++
       }catch (e) {
+        error.push(mId)
         console.log(e)
         console.log('error mId:' + mId)
         console.log('sql is:' + mysql.getLastSql())
       }finally {
-        count++
         console.log('count is:' + count)
         console.log('start next movie')
       }
     }
     console.timeEnd('time spend:')
+    console.log('successed count:' + count)
+    console.log('faild count:' + error.length)
+    error.length && console.log('failed mId:' + JSON.stringify(error))
+
     await mysql.end()
     await douban.pageClose()
     await douban.browserClose()

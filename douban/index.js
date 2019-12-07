@@ -28,7 +28,7 @@ module.exports = class Douban {
       // timeout: 0,
       waitUntil: 'domcontentloaded'
     })
-    !this.config.headless && await this.page.evaluate(()=>document.documentElement.webkitRequestFullScreen())
+    !this.config.headless && await this.page.evaluate(()=>document.documentElement.webkitRequestFullScreen()) // 全屏
   }
 
   async $(el) {

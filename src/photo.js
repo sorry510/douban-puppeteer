@@ -3,12 +3,13 @@ const mysql = require('../db/Mysql')
 const mids = require('../movies.json')
 
 const baseUrl = 'https://movie.douban.com'
+const error = [] // 失败mId
+let count = 0 // 成功数量
 
 ;(async () => {
     const douban = await new Douban({headless: true}) // 为true为无头
     await douban.launch()
     console.time('time spend:')
-    let count = 0
     for(let { mId, type, title } of mids) {
       const info = { 
         mId, 
@@ -16,7 +17,7 @@ const baseUrl = 'https://movie.douban.com'
       } // 电影信息
       
       try {
-        console.log('start open douban_photo url')
+        console.log('start open douban_photo url:' + mId)
         await douban.goto(`${baseUrl}/subject/${mId}/all_photos`) // 进入照片页
         await douban.wait('.article')
         console.log('start scripy ...')
@@ -34,20 +35,24 @@ const baseUrl = 'https://movie.douban.com'
         }else {
           // 新增电影记录
           const { insertId } = await mysql.table('t_douban_photo').insert(info)
-          console.log(insertId)
           console.log('insert movie mId:' + mId)
         }
+        count++
       }catch (e) {
+        error.push(mId)
         console.log(e)
         console.log('error mId:' + mId)
         console.log('sql is:' + mysql.getLastSql())
       }finally {
-        count++
         console.log('count is:' + count)
         console.log('start next movie')
       }
     }
     console.timeEnd('time spend:')
+    console.log('successed count:' + count)
+    console.log('faild count:' + error.length)
+    error.length && console.log('failed mId:' + JSON.stringify(error))
+
     await mysql.end()
     await douban.pageClose()
     await douban.browserClose()
