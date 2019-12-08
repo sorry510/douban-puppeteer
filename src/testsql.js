@@ -1,4 +1,5 @@
 const mysql = require('../db/Mysql')
+const fs = require('fs')
 
 ;(async () => {
   try {
@@ -27,26 +28,25 @@ const mysql = require('../db/Mysql')
       "longtime": "[\"122分钟\",\"118分钟(威尼斯电影节)\"]",
       "rating_average": "8.1"
     }
-    // const [rows, fields] = await mysql.query('select id from t_douban_movie where mId = ? limit 1', [1])
-    // const [rows, fields] = await mysql.query("update t_douban_movie set genres='ab', update_time='23432' where mId=? limit 1", [1])
-    await mysql.table('t_douban_movie')
-      .select('id', 'title')
-      .where([
-        ['id', '>', 1],
-        ['mId', 2],
-      ])
-      .orderBy('id', 'asc')
-      .limit(1, 10)
-      .get()
-      // .insert(data)
-    // const sql2 = mysql.query("select id,title from t_douban_movie where 1=1 and id='1' and mId='1' order by id asc limit 1, 9").first()
-    console.log(res.length)
+    const list = await mysql.raw('select distinct playerId from t_douban_movie_player').get()
+    const players = list.map(({ playerId })=> playerId)
+    fs.writeFile('players.json', JSON.stringify(players), (err) => {
+      if (err) throw err
+      console.log('saved in players.json')
+    })
 
-    // for(let {id, aka} of rows) {
-    //   const str_aka = JSON.stringify(aka.split('/'))
-    //   await mysql.execute('update t_douban_subject set aka = ? where id = ?', [str_aka, id])
-    //   console.log('next...')
-    // }
+    // await mysql.table('t_douban_movie_player')
+    //   .select('id', 'title')
+    //   .where([
+    //     ['id', '>', 1],
+    //     ['mId', 2],
+    //   ])
+    //   .orderBy('id', 'asc')
+    //   .limit(1, 10)
+    //   .get()
+      // .insert(data)
+    // console.log(res.length)
+
     await mysql.end()
     console.timeEnd()
   }catch (e) {
