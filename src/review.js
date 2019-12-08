@@ -22,13 +22,13 @@ let count = 0 // 成功数量
         console.log('start scripy ...')
 
         await douban.$('.btn-unfold') && douban.click('.btn-unfold') // 可能又被隐藏的评论，点击展开
-        await douban.wait(666)
+        await douban.wait(1000)
 
         const unfolds = (await douban.$$('#content .article a.unfold')).splice(0, getCount) // 展开
         for(let el of unfolds) {
           // 不能同时点击，而且需要给浏览器延迟时间
           await el.click()
-          await douban.wait(666)
+          await douban.wait(600)
         }
         console.log('unfolds complate')  
         const reivews = (await douban.$$('#content .article .review-list > div')).splice(0, getCount) // 评论doms5条

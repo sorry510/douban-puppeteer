@@ -1,8 +1,15 @@
 const _ = require('lodash')
+
 // 匹配小括号中的内容
 const regIncludes = (str)=> {
 	const res = str.match(/\((.+?)\)/g)
 	return res ? JSON.stringify(res.map(item=> item.match(/\((.+?)\)/)[1])) : '[]'
+}
+
+// 匹配小括号
+const regInOne = (str)=> {
+	const res = str.match(/\((.+?)\)/)
+	return res ? res[0] : ''
 }
 
 // 是否包含中文
@@ -34,6 +41,7 @@ const speicalFilter = (data)=> {
 
 module.exports = {
 	regIncludes,
+	regInOne,
 	includeZh,
 	jsonSplitStr,
 	speicalFilter
