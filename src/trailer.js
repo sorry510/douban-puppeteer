@@ -27,7 +27,7 @@ let count = 0 // 成功数量
         const videoUrls = await douban.$$eval('#content .article ul li a.pr-video', eles=> eles.map(({ href })=> href)) // 视频页地址
         
         // 分批获取url，防止一次请求过多卡死
-        async function getUrl(urls, batch=5) {
+        async function getUrl(urls, batch=3) {
           const arr = []
           for(let v of _.chunk(urls, batch)) {
             const temp = await Promise.all(v.map(async url=> {

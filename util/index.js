@@ -39,10 +39,23 @@ const speicalFilter = (data)=> {
 	}
 }
 
+// 随机min-max之间的数字
+const randInt= (min, max)=> {
+	if(!max) {
+		max = min
+		min = 0
+	}
+	min = Math.ceil(min)
+	max = Math.floor(max)
+	return Math.floor(Math.random() * (max - min)) + min // 不含最大值，含最小值
+	// return Math.floor(Math.random() * (max - min + 1)) + min // 含最大值，含最小值 
+}
+
 module.exports = {
 	regIncludes,
 	regInOne,
 	includeZh,
 	jsonSplitStr,
-	speicalFilter
+	speicalFilter,
+	randInt
 }

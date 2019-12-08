@@ -1,4 +1,16 @@
+require('dotenv').config()
 const puppeteer = require('puppeteer')
+const { randInt } = require('../util')
+
+let { PROXY_IP } = process.env
+PROXY_IP = PROXY_IP.trim()
+let proxyServer = ''
+if(PROXY_IP !== '') {
+  PROXY_ARR = PROXY_IP.split(',').map(v=> v.trim())
+  const num = randInt(PROXY_ARR.length) // 随机一个0-length数字
+  proxyServer = PROXY_ARR[num]
+  console.log('proxyServer is:' + proxyServer)
+}
 
 module.exports = class Douban {
   constructor(config={}) {
@@ -9,8 +21,10 @@ module.exports = class Douban {
       	width: 1920 - 60, 
       	height: 950
       },
-      // devtools: true
+      devtools: false
     }
+    // 使用代理
+    if(PROXY_IP !== '') defaultConfig.args = [`--proxy-server=${proxyServer}`]
     this.config = {...defaultConfig, ...config}
   }
 
