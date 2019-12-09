@@ -3,7 +3,7 @@ const Douban = require('../douban')
 const mysql = require('../db/Mysql')
 const players = require('../players.json')
 const { jsonSplitStr, speicalFilter } = require('../util')
-const randomUseragent = require('random-useragent')
+// const randomUseragent = require('random-useragent')
 
 const baseUrl = 'https://movie.douban.com'
 const error = [] // 失败playerId
