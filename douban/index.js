@@ -2,7 +2,7 @@ require('dotenv').config()
 const puppeteer = require('puppeteer')
 const { randInt } = require('../util')
 
-let { PROXY_IP } = process.env
+let { PROXY_IP='' } = process.env
 PROXY_IP = PROXY_IP.trim()
 let proxyServer = ''
 if(PROXY_IP !== '') {
