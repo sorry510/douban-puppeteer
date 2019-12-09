@@ -10,7 +10,7 @@ const error = [] // 失败playerId
 let count = 0 // 成功数量
 
 // 人物表
-;(async () => {
+async function player(){
     const douban = await new Douban({headless: true }) // 为true为无头
     await douban.launch()
     console.time('time spend:')
@@ -20,10 +20,10 @@ let count = 0 // 成功数量
       for(let v of _.chunk(list, batch)) {
         await Promise.all(v.map(async playerId=> {
           // 同时打开新的tab页，加快抓取速度，同时避免污染this.page
+          // 查询人员是否被记录过
+          const find = await mysql.table('t_douban_player').select('id').where('playerId', playerId).first()
+          if(find) return true // 已记录，直接下一个
           try {
-            // 查询人员是否被记录过
-            const find = await mysql.table('t_douban_player').select('id').where('playerId', playerId).first()
-            if(find) return true // 已记录，直接下一个
             const newPage = await douban.browser.newPage()
             // 随机一个代理
             // const newUserAgent = randomUseragent.getRandom()
@@ -92,7 +92,6 @@ let count = 0 // 成功数量
             console.log('count is:' + count)
             console.log('start next movie')
           }
-         
         }))
       }
     }
@@ -180,4 +179,12 @@ let count = 0 // 成功数量
     await mysql.end()
     await douban.pageClose()
     await douban.browserClose()
-})()
+}
+exports = module.exports = player
+
+if(__filename === process.mainModule.filename) {
+  ;(async ()=> {
+    await player()
+  })()
+}
+

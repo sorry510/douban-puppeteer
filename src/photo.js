@@ -7,7 +7,7 @@ const error = [] // 失败mId
 let count = 0 // 成功数量
 
 // 海报照片
-;(async () => {
+async function photo() {
     const douban = await new Douban({headless: true}) // 为true为无头
     await douban.launch()
     console.time('time spend:')
@@ -57,4 +57,11 @@ let count = 0 // 成功数量
     await mysql.end()
     await douban.pageClose()
     await douban.browserClose()
-})()
+}
+exports = module.exports = photo
+
+if(__filename === process.mainModule.filename) {
+  ;(async ()=> {
+    await photo()
+  })()
+}

@@ -40,7 +40,7 @@ const speicalFilter = (data)=> {
 }
 
 // 随机min-max之间的数字
-const randInt= (min, max)=> {
+const randInt = (min, max)=> {
 	if(!max) {
 		max = min
 		min = 0
@@ -51,11 +51,17 @@ const randInt= (min, max)=> {
 	// return Math.floor(Math.random() * (max - min + 1)) + min // 含最大值，含最小值 
 }
 
+const getfilename = (path)=> {
+	path = path.replace(/\\/g, '/')
+	return path.substr(path.lastIndexOf("/"))
+}
+
 module.exports = {
 	regIncludes,
 	regInOne,
 	includeZh,
 	jsonSplitStr,
 	speicalFilter,
-	randInt
+	randInt,
+	getfilename
 }

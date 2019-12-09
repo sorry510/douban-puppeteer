@@ -8,7 +8,7 @@ const error = [] // 失败mId
 let count = 0 // 成功数量
 
 // 预告片视频
-;(async () => {
+async function trailer() {
     const douban = await new Douban({headless: true}) // 为true为无头
     await douban.launch()
     console.time('time spend:')
@@ -83,4 +83,11 @@ let count = 0 // 成功数量
     await mysql.end()
     await douban.pageClose()
     await douban.browserClose()
-})()
+}
+exports = module.exports = trailer
+
+if(__filename === process.mainModule.filename) {
+  ;(async ()=> {
+    await trailer()
+  })()
+}
