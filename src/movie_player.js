@@ -49,7 +49,7 @@ let count = 0 // 成功数量
             }else {
               // 新增电影记录
               const { insertId } = await mysql.table('t_douban_movie_player').insert(info)
-              console.log(`update t_douban_movie_player mid:${info.mId}, playerId:${info.playerId}`)
+              console.log(`insert t_douban_movie_player mid:${info.mId}, playerId:${info.playerId}`)
             }
             return true
           }))
@@ -81,7 +81,7 @@ let count = 0 // 成功数量
             }else {
               // 新增电影记录
               const { insertId } = await mysql.table('t_douban_movie_player').insert(info)
-              console.log(`update t_douban_movie_player mid:${info.mId}, playerId:${info.playerId}`)
+              console.log(`insert t_douban_movie_player mid:${info.mId}, playerId:${info.playerId}`)
             }
             return true
           }))
