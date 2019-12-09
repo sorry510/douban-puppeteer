@@ -11,7 +11,7 @@ let count = 0 // 成功数量
 
 // 人物表
 ;(async () => {
-    const douban = await new Douban({headless: false }) // 为true为无头
+    const douban = await new Douban({headless: true }) // 为true为无头
     await douban.launch()
     console.time('time spend:')
 
