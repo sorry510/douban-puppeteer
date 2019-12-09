@@ -102,9 +102,9 @@ let count = 0 // 成功数量
     console.log('faild count:' + error.length)
     error.length && console.log('failed mId:' + JSON.stringify(error))
     // save player.json
-    fs.writeFile('player.json', JSON.stringify(Array.from(player)), (err) => {
+    fs.writeFile('players.json', JSON.stringify(Array.from(player)), (err) => {
       if (err) throw err
-      console.log('player saved in player.json')
+      console.log('player saved in players.json')
     })
     await mysql.end()
     await douban.pageClose()
