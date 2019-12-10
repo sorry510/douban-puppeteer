@@ -27,6 +27,11 @@ if(fs.existsSync(traceFilePath)) {
   }
 }
 
+// 记录断点，内部必须使用同步代码，否则exit退出后会放弃执行队列中的任务
+process.on('exit', code=> {
+  fs.writeFileSync(traceFilePath, JSON.stringify(global.traceIndex))
+})
+
 async function createMovieId() {
   const movie_id = require('./movie_id')
   await movie_id()
@@ -62,10 +67,7 @@ async function start() {
   await start()
 })()
 
-// 记录断点，内部必须使用同步代码，否则exit退出后会放弃执行队列中的任务
-process.on('exit', code=> {
-  fs.writeFileSync(traceFilePath, JSON.stringify(global.traceIndex))
-})
+
 
 
 
