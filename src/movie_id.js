@@ -23,7 +23,7 @@ async function movie_id() {
 
     // 点击一次20条
     for(let i=1; i<MOVIE_COUNT/20; i++) {
-      console.log('click get more')
+      console.log('click get more + 20 numbers')
       await douban.click('#content .list-wp .more')
       await douban.wait(1000)
     }
@@ -33,7 +33,6 @@ async function movie_id() {
 
     const movies = mIds.map((mId, index)=> ({title: titles[index], mId, type}))
 
-    console.log(movies[0])
     console.log('movie list count:' + movies.length)
 
     fs.writeFile('movies.json', JSON.stringify(movies), (err) => {
