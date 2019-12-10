@@ -2,3 +2,4 @@
 .env
 mid.json
 *.json
+trace/*.json

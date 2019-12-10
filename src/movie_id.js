@@ -10,7 +10,8 @@ const typelist = ['热门', '最新', '经典'] // 对应type 0,1,2
 
 const movieSearchUrl = `https://movie.douban.com/explore#!type=movie&tag=${MOVIE_TAG}&sort=recommend&page_limit=20&page_start=0`
 
-;(async () => {
+// 电影id
+async function movie_id() {
   try {
     const type = typelist.indexOf(MOVIE_TAG)
     const douban = await new Douban({headless: true})
@@ -43,4 +44,11 @@ const movieSearchUrl = `https://movie.douban.com/explore#!type=movie&tag=${MOVIE
   }catch (e) {
     console.log(e)
   }
-})()
+}
+exports = module.exports = movie_id
+
+if(__filename === process.mainModule.filename) {
+  ;(async ()=> {
+    await movie_id()
+  })()
+}
