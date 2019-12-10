@@ -176,7 +176,7 @@ async function player(){
   console.log('faild count:' + error.length)
   error.length && console.log('failed playerId:' + JSON.stringify(error))
 
-  await mysql.end()
+  // await mysql.end()
   await douban.pageClose()
   await douban.browserClose()
 }

@@ -110,7 +110,7 @@ async function movie_player() {
     if (err) throw err
     console.log('player saved in players.json')
   })
-  await mysql.end()
+  // await mysql.end()
   await douban.pageClose()
   await douban.browserClose()
 }

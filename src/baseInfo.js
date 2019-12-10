@@ -139,7 +139,7 @@ async function baseInfo() {
   console.log('faild count:' + error.length)
   error.length && console.log('failed mId:' + JSON.stringify(error))
 
-  await mysql.end()
+  // await mysql.end()
   await douban.pageClose()
   await douban.browserClose()
 }
