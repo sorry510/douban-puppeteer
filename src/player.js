@@ -72,11 +72,31 @@ async function player(){
                 break
             }
           })
-          
+          // 简介
           if(await newPage.$('#intro .bd .all.hidden')) {
             info.introduce = speicalFilter(await newPage.$eval('#intro .bd .all.hidden', ({ innerHTML })=> innerHTML))
           }else {
             info.introduce = speicalFilter(await newPage.$eval('#intro .bd', ({ innerHTML })=> innerHTML))
+          }
+          // 最好的作品
+          if(await newPage.$('#best_movies ul li')) {
+            const titles = await newPage.$$eval('#best_movies ul li .info a', el=> ({ title: el.title, href: el.href }))
+            const rating_averages = await newPage.$$eval('#best_movies ul li .info em', ({ innerText })=> innerText)
+            const years = await newPage.$$eval('#best_movies ul li .info .pl', ({ innerText })=> innerText)
+            const imgs = await newPage.$$eval('#best_movies ul li img', ({ src })=> src)
+            const moviesInfo = titles.map((item, index)=> {
+              return {
+                mId: item.href.match(/[0-9]+/g)[0],
+                title: speicalFilter(item.title),
+                rating_averages: rating_averages[index],
+                img: imgs[index],
+                year: years[index],
+              }
+            })
+            info.movies = JSON.stringify(moviesInfo)
+          }else {
+            const moviesInfo = []
+            info.movies = JSON.stringify(moviesInfo)
           }
           // 新增人物记录
           const { insertId } = await mysql.table('t_douban_player').insert(info)
@@ -100,10 +120,10 @@ async function player(){
   // 单线程执行
   async function one(list) {
     for(let playerId of list) {
+      const find = await mysql.table('t_douban_player').select('id').where('playerId', playerId).first()
+      if(find) continue // 已记录，直接下一个
       try {
         // 查询人员是否被记录过
-        const find = await mysql.table('t_douban_player').select('id').where('playerId', playerId).first()
-        if(find) continue // 已记录，直接下一个
         console.log('start open douban_celebrity url:' + playerId)
         // const newUserAgent = randomUseragent.getRandom()
         // await douban.page.setUserAgent(newUserAgent)
@@ -148,12 +168,34 @@ async function player(){
               break
           }
         })
-        
+        // 简介
         if(await douban.$('#intro .bd .all.hidden')) {
           info.introduce = speicalFilter(await douban.$eval('#intro .bd .all.hidden', ({ innerHTML })=> innerHTML))
         }else {
           info.introduce = speicalFilter(await douban.$eval('#intro .bd', ({ innerHTML })=> innerHTML))
         }
+        // 最好的作品
+        if(await douban.$('#best_movies ul li')) {
+          const titles = await douban.$$eval('#best_movies ul li .info a', els=> els.map(el=> ({ title: el.title, href: el.href })))
+          const rating_averages = await douban.$$eval('#best_movies ul li .info em', els=> els.map(({ innerText })=> innerText))
+          const years = await douban.$$eval('#best_movies ul li .info .pl', els=> els.map(({ innerText })=> innerText))
+          const imgs = await douban.$$eval('#best_movies ul li img', els=> els.map(({ src })=> src))
+          const moviesInfo = titles.map((item, index)=> {
+            return {
+              mId: item.href.match(/[0-9]+/g)[0],
+              title: speicalFilter(item.title),
+              rating_averages: rating_averages[index],
+              img: imgs[index],
+              year: years[index],
+            }
+          })
+          info.movies = JSON.stringify(moviesInfo)
+        }else {
+          const moviesInfo = []
+          info.movies = JSON.stringify(moviesInfo)
+        }
+        console.log(info)
+        process.exit()
         // 新增人物记录
         const { insertId } = await mysql.table('t_douban_player').insert(info)
         console.log('insert player id:' + info.playerId)
@@ -169,7 +211,7 @@ async function player(){
       }
     }
   }
-  // await one(players)
+  await one(players)
   
   console.timeEnd('time spend:')
   console.log('successed count:' + count)
