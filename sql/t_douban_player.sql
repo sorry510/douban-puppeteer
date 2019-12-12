@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-12-08 17:08:47
+Date: 2019-12-12 11:04:54
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,7 +33,8 @@ CREATE TABLE `t_douban_player` (
   `name_cn` varchar(50) DEFAULT '' COMMENT '更多中文名',
   `family` varchar(100) DEFAULT '' COMMENT '家庭成员',
   `introduce` text DEFAULT NULL COMMENT '人物简介',
+  `movies` text DEFAULT NULL COMMENT '作品信息json字符串',
   `update_time` bigint(20) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `playerId` (`playerId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2380 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12298 DEFAULT CHARSET=utf8;
