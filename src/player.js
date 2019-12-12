@@ -211,7 +211,7 @@ async function player(){
       }
     }
   }
-  await one(players)
+  // await one(players)
   
   console.timeEnd('time spend:')
   console.log('successed count:' + count)

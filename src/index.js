@@ -56,7 +56,9 @@ async function start() {
     console.log('create player data must has players.json, may be you can run movie_player.js create players.json or from movie_player.sql created')
   }else {
     const player = require('./player')
+    const player_photo = require('./player_photo')
     await player()
+    await player_photo()
   }
 }
 
