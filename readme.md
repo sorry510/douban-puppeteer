@@ -27,7 +27,8 @@
 7. node src/trailer.js 爬取电影预告视频(需要movies.json)
 
 8. node src/player.js 爬取电影人物（导演和演员）(需要players.json)
+9. node src/player_photo.js 爬取电影人物的相册（导演和演员）(需要players.json)
 
 ## 注意事项
-1. 单独执行某个文件时，2-7需要1的前置条件（2-7可以并行），8需要2的前置条件
+1. 单独执行某个文件时，2-7需要1的前置条件（2-7可以并行），8,9需要2的前置条件
 2. 爬取太快会被封ip
