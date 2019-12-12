@@ -80,10 +80,10 @@ async function player(){
           }
           // 最好的作品
           if(await newPage.$('#best_movies ul li')) {
-            const titles = await newPage.$$eval('#best_movies ul li .info a', el=> ({ title: el.title, href: el.href }))
-            const rating_averages = await newPage.$$eval('#best_movies ul li .info em', ({ innerText })=> innerText)
-            const years = await newPage.$$eval('#best_movies ul li .info .pl', ({ innerText })=> innerText)
-            const imgs = await newPage.$$eval('#best_movies ul li img', ({ src })=> src)
+            const titles = await newPage.$$eval('#best_movies ul li .info a', els=> els.map(el=> ({ title: el.title, href: el.href })))
+            const rating_averages = await newPage.$$eval('#best_movies ul li .info em', els=> els.map(({ innerText })=> innerText))
+            const years = await newPage.$$eval('#best_movies ul li .info .pl', els=> els.map(({ innerText })=> innerText))
+            const imgs = await newPage.$$eval('#best_movies ul li img', els=> els.map(({ src })=> src))
             const moviesInfo = titles.map((item, index)=> {
               return {
                 mId: item.href.match(/[0-9]+/g)[0],
